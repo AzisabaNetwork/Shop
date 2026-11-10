@@ -1,0 +1,36 @@
+name: Shop
+description: $description
+version: '${version}'
+main: net.azisaba.shop.Shop
+api-version: '1.21.11'
+load: POSTWORLD
+folia-supported: true
+authors: [ AzisabaNetwork ]
+website: https://github.com/AzisabaNetwork/Shop
+depend: [ Vault ]
+softdepend: [ MythicMobs, CrackShot, MMLuck, Rarity ]
+commands:
+  shop:
+    description: ショップを開きます
+    aliases: [ buy ]
+    permission: shop.use
+    usage: /<command> [ショップ名]
+  sell:
+    description: アイテムを売却します
+    permission: shop.sell
+    usage: /<command> [hand|all]
+  shopadmin:
+    description: Shop の管理コマンド
+    permission: shop.admin
+    usage: /<command> <reload|import [force]|iteminfo>
+
+permissions:
+  shop.use:
+    description: /shop (/buy) でショップを開く
+    default: true
+  shop.sell:
+    description: /sell でアイテムを売却する
+    default: true
+  shop.admin:
+    description: /shopadmin (reload / import / iteminfo)
+    default: op

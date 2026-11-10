@@ -1,0 +1,13 @@
+# メインメニュー
+# items に書いた順で左上から並びます（ページ番号・スロット番号は不要）。
+# rows×9 個に収まらない場合は最下段をページ送りにして自動でページを増やします。
+# 並びを調整したい時は `- type: BLANK` で空きマスを入れられます。
+# target-shop には shops/ フォルダ内のファイル名（拡張子なし）を指定
+Menu:
+  rows: 3
+  items:
+    - id: AMETHYST_SHARD
+      name: '&5特殊アイテム'
+      lore:
+        - '&8(&fMythicMobs / CrackShot&8)'
+      target-shop: Example

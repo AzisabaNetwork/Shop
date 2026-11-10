@@ -1,0 +1,88 @@
+# =============================================
+#  Shop 設定 (GUIShop の config.yml と同じキー構成)
+#  plugins/GUIShop がある状態で初回起動すると、
+#  config.yml / menu.yml / transaction.yml / shops/ は自動で移行されます。
+#  GUIShop 形式（pages / スロット番号）の menu.yml・shops/*.yml は読み込み時に
+#  items リスト形式へ自動変換されます（元ファイルは backup/legacy-日時/ に保存）。
+# =============================================
+
+# コマンド名・エイリアスは plugin.yml に記載しています（/shop = /buy, /sell, /shopadmin）
+
+# ESC で閉じた時に 1 つ前の画面へ戻らない
+disable-escape-back: false
+disable-escape-back-quantity: false
+
+enable-sound: true
+# GUIShop 形式 (ENTITY_PLAYER_LEVELUP) と キー形式 (entity.player.levelup) のどちらも可
+purchase-sound: 'ENTITY_PLAYER_LEVELUP'
+
+# 購入価格の無いアイテムをショップに表示しない
+hide-non-buyable: false
+# 価格を 1.5K / 2M のように省略表示
+abbreviate-prices: false
+
+# 売買をコンソールに記録
+transaction-log: false
+
+# ショップ画面のボタン。slot は最下段 (45-53) のみ指定できます
+buttons:
+  forward:
+    id: 'GHAST_TEAR'
+    shop-name: '&b&l» &f次へ'
+    name: '&b&l» &f次へ'
+    shop-lore: '&8クリックして次のページへ'
+    lore: '&8クリックして次のページへ'
+    slot: 52
+  backward:
+    id: 'GHAST_TEAR'
+    shop-name: '&b&l« &f戻る'
+    name: '&b&l« &f戻る'
+    shop-lore: '&8クリックして前のページへ'
+    lore: '&8クリックして前のページへ'
+    slot: 48
+  page-indicator:
+    id: 'NETHER_STAR'
+    name: '&e&l✦ &fページ &b%page% &7/ &b%maxpage% &e&l✦'
+    lore:
+      - '&8━━━━━━━━━━━━━━━━━━'
+      - '&7矢印でアイテムを閲覧できます'
+      - '&8━━━━━━━━━━━━━━━━━━'
+    slot: 50
+  # ショップ画面からメニューへ戻るボタン（本プラグインで追加）
+  back:
+    id: 'BARRIER'
+    shop-name: '&c&lメニューに戻る'
+    slot: 45
+
+titles:
+  menu: '&8&lShop %page-number%'
+  menu-shop-pagenumber: '&f> ページ: &7%number%'
+  shop: '&8&lShop &f> &8&l%shopname%'
+  sell: '&8&lShop &f> &8&l売却'
+  transaction-buy-button: '&a&l購入: %amount%個'
+  transaction-sell-button: '&c&l売却: %amount%個'
+  transaction-buy-lore: '&7クリックで %amount% 個を %price% で購入'
+  transaction-sell-lore: '&7クリックで %amount% 個を %price% で売却'
+  transaction-not-sellable: '&c&l売却不可'
+  transaction-not-buyable: '&c&l購入不可'
+  transaction-balance-title: '&6&l%player%'
+  transaction-balance-lore: '&7所持金: &a%balance%'
+
+transaction-gui:
+  buy-material: 'LIME_STAINED_GLASS_PANE'
+  sell-material: 'RED_STAINED_GLASS_PANE'
+  not-buyable-material: 'GRAY_STAINED_GLASS_PANE'
+  not-sellable-material: 'GRAY_STAINED_GLASS_PANE'
+  quantity-1: 1
+  quantity-2: 32
+  quantity-3: 64
+
+disabled-worlds:
+  - 'Test'
+
+lores:
+  buy: '&f購入: &c%amount%'
+  sell: '&f売却: &c%amount%'
+  free: '&f購入: &aFREE'
+  cannot-buy: '&c購入できません'
+  cannot-sell: '&c売却できません'

@@ -1,0 +1,47 @@
+# =============================================
+#  /sell の設定
+# =============================================
+#  /sell        … 売却 GUI を開く（閉じると売却。売れない物は返却）
+#  /sell hand   … 手に持っているスタックを売却
+#  /sell all    … インベントリ（防具・オフハンド以外）の売れる物を全て売却
+#
+#  売却価格の決まり方
+#   1. use-shop-sell-prices: true なら shops/*.yml の sell-price を使う
+#      （id: 'mythic:XXX' / 'crackshot:XXX' のショップ品も対象）
+#   2. 下の items に書いた価格はショップの価格より優先（0 で売却不可にできる）
+#
+#  手に持ったアイテムの ID は /shopadmin iteminfo で確認できます。
+# =============================================
+
+# 売却 GUI の行数 (1-6)
+gui-rows: 6
+
+# ショップの sell-price を /sell の価格としても使う
+use-shop-sell-prices: true
+
+# true: 説明文(Lore)・カスタムモデル・PDC(他プラグインのデータ)・耐久減少がある
+#       バニラ素材は「カスタムアイテム」とみなして売却不可にする
+#       （ダイヤ素材の独自アイテムがダイヤとして売れてしまうのを防ぐ）
+vanilla-strict: true
+
+vanilla:
+  enabled: true
+  # ショップに並べていないバニラアイテムの売却価格
+  items: {}
+  #  DIAMOND: 50
+
+mythic:
+  # MythicMobs アイテムを /sell で売れるようにする
+  enabled: true
+  # MythicMobs のアイテム内部名: 1 個あたりの価格
+  items: {}
+  #  ExampleSword: 1000
+  #  MobDrop_Bone: 5.5
+
+crackshot:
+  # CrackShot 武器を /sell で売れるようにする
+  enabled: false
+  # CrackShot の weapon_id（武器設定のキー。表示名ではない）: 1 個あたりの価格
+  # 手に持った武器の weapon_id は /shopadmin iteminfo で確認できます
+  items: {}
+  #  AK-47: 5000

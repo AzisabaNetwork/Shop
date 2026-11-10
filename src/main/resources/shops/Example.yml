@@ -1,0 +1,44 @@
+# ショップ定義の例
+#
+# items に書いた順で左上から並びます。ページ番号・スロット番号は書きません。
+# 1 ページ 45 個を超えると自動でページが増えます（最下段はページ送り等のボタン用）。
+# 並びを調整したい時は `- type: BLANK` で空きマスを入れられます。
+#
+# id の書き方:
+#   DIAMOND                    … バニラ
+#   'mythic:アイテム内部名'      … MythicMobs アイテム（mm: でも可）。購入時は MMLuck 経由で渡す
+#   'crackshot:weapon_id'      … CrackShot 武器（cs: でも可）。weapon_id は武器設定のキー（表示名ではない）
+#                                手に持った武器の weapon_id は /shopadmin iteminfo で確認できます
+#
+# 使えるキー:
+#   type: SHOP / COMMAND / DUMMY / BLANK   buy-price / sell-price (省略で購入不可/売却不可)
+#   shop-name / shop-lore          ショップ画面だけの名前・説明
+#   name / lore                    購入したアイテムにも付く名前・説明
+#                                  （MythicMobs アイテムは MMLuck が生成するため購入品には付きません）
+#   enchantments: 'SHARPNESS:5 UNBREAKING:3'
+#   commands: [ 'give %player% diamond 1' ]  購入時にコンソールで実行（アイテムは渡さない）
+#   permission: 'shop.vip'          購入に必要な権限
+#   target-shop: Blocks             クリックで別のショップを開く
+#
+# ショップ全体に権限を付ける場合は permission: を最上位に書く
+title: '&5特殊アイテム'
+items:
+  - type: SHOP
+    id: DIAMOND
+    buy-price: 1000
+    sell-price: 50
+  - type: SHOP
+    id: 'mythic:ExampleItem'
+    buy-price: 5000
+    sell-price: 1000
+  - type: SHOP
+    id: 'crackshot:AK-47'
+    buy-price: 100000
+    shop-lore:
+      - '&7強力なアサルトライフル'
+  - type: COMMAND
+    id: PAPER
+    shop-name: '&e称号チケット'
+    buy-price: 10000
+    commands:
+      - 'lp user %player% permission set example.title true'

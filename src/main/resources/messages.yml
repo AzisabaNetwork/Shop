@@ -1,0 +1,36 @@
+messages:
+  prefix: '&f[&cShop&f]'
+  no-permission: '&c権限がありません。'
+  disabled-world: '&cこのワールドではショップを利用できません。'
+  players-only: '&cこのコマンドはプレイヤーのみ実行できます。'
+  shop-not-found: '&cショップ &f%shop% &cが見つかりません。'
+
+  # %taken%
+  purchase: '&f購入しました。&c%taken% &fが支払われました。'
+  # %needed%
+  not-enough-money: '&f購入には &c%needed% &fが必要です。'
+  command-error: '&cコマンドの実行中にエラーが発生しました。管理者に連絡してください。'
+  # %money%
+  sell: '&fアイテムを売却し、&a%money% &fを受け取りました。'
+  # %count%
+  cant-sell: '&c%count% 個のアイテムは売却できないため返却しました。'
+  nothing-to-sell: '&c売却できるアイテムがありません。'
+  not-sellable-hand: '&c手に持っているアイテムは売却できません。'
+  cant-buy: '&cこのアイテムは購入できません。'
+  # %amount%
+  partial-purchase: '&eインベントリに入りきらなかった &f%amount% &e個を足元にドロップしました。'
+  # %error%
+  went-wrong: '&cアイテムの生成に失敗しました: &f%error%'
+  something-wrong: '&c問題が発生しました。管理者に連絡してください。'
+  economy-missing: '&c経済プラグインが見つからないため取引できません。'
+
+  currency-prefix: '$'
+  currency-suffix: ''
+
+  # 管理コマンド
+  reloaded: '&a設定を再読み込みしました。&7(ショップ %shops% 件 / 売却価格 %prices% 件)'
+  import-done: '&aGUIShop から %files% 個のファイルをインポートしました。&7/shopadmin reload で反映されます（GUIShop 形式は自動で変換されます）。'
+  import-missing: '&cplugins/GUIShop が見つかりません。'
+  import-exists: '&c既に設定が存在します。上書きするには &f/shopadmin import force &cを実行してください（既存ファイルはバックアップされます）。'
+  iteminfo-empty: '&c手にアイテムを持ってください。'
+  iteminfo: '&fID: &e%id%\n&f設定用: &7id: ''%config%''\n&f/sell 価格: &a%price%'
