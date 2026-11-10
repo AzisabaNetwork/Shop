@@ -60,4 +60,15 @@ class SellConfig(
     val mythicEnabled: Boolean,
     val crackShotEnabled: Boolean,
     val vanillaEnabled: Boolean,
+    val storageBox: StorageBoxSell,
+)
+
+class StorageBoxSell(
+    val enabled: Boolean,
+    /** true: 中身だけ売って空の Storage Box を返す / false: Storage Box ごと回収する */
+    val keepBox: Boolean,
+    /** 中身の売却額から差し引く手数料 (%) */
+    val feePercent: Double,
+    /** /sell all でインベントリ内の Storage Box も売る */
+    val includeInSellAll: Boolean,
 )

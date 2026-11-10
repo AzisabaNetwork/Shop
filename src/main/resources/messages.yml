@@ -14,6 +14,11 @@ messages:
   sell: '&fアイテムを売却し、&a%money% &fを受け取りました。'
   # %count%
   cant-sell: '&c%count% 個のアイテムは売却できないため返却しました。'
+  # Storage Box を売った時 (%item% %amount% %money% %fee%)
+  #   sell-storagebox      … Storage Box ごと回収した時
+  #   sell-storagebox-kept … 空の Storage Box を返した時 (sell.yml の storagebox.keep-box: true)
+  sell-storagebox: '&7Storage Box (&f%item% &7x%amount%) を売却: &a%money% &7(手数料 &c%fee%&7 / Storage Box は回収しました)'
+  sell-storagebox-kept: '&7Storage Box (&f%item% &7x%amount%) の中身を売却: &a%money% &7(手数料 &c%fee%&7)'
   nothing-to-sell: '&c売却できるアイテムがありません。'
   not-sellable-hand: '&c手に持っているアイテムは売却できません。'
   cant-buy: '&cこのアイテムは購入できません。'
@@ -33,4 +38,5 @@ messages:
   import-missing: '&cplugins/GUIShop が見つかりません。'
   import-exists: '&c既に設定が存在します。上書きするには &f/shopadmin import force &cを実行してください（既存ファイルはバックアップされます）。'
   iteminfo-empty: '&c手にアイテムを持ってください。'
+  iteminfo-storagebox: '&fStorage Box の中身: &e%id% &7x%amount%\n&f設定用: &7id: ''%config%''\n&f売却額: &a%price%'
   iteminfo: '&fID: &e%id%\n&f設定用: &7id: ''%config%''\n&f/sell 価格: &a%price%'

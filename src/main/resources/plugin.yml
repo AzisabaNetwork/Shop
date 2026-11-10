@@ -8,7 +8,7 @@ folia-supported: true
 authors: [ AzisabaNetwork ]
 website: https://github.com/AzisabaNetwork/Shop
 depend: [ Vault ]
-softdepend: [ MythicMobs, CrackShot, MMLuck, Rarity ]
+softdepend: [ MythicMobs, CrackShot, MMLuck, Rarity, StorageBox ]
 commands:
   shop:
     description: ショップを開きます

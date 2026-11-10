@@ -2,6 +2,7 @@ package net.azisaba.shop.command
 
 import net.azisaba.shop.Migration
 import net.azisaba.shop.Shop
+import net.azisaba.shop.item.hook.StorageBoxHook
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -103,6 +104,9 @@ class ShopCommands(private val plugin: Shop) {
         private fun itemInfo(sender: CommandSender) {
             val player = sender as? Player ?: return messages.send(sender, "players-only")
             val hand = player.inventory.itemInMainHand
+            plugin.items.storageBox?.takeIf { it.isStorageBox(hand) }?.let { boxes ->
+                return storageBoxInfo(player, boxes.contents(hand))
+            }
             val ref = plugin.items.identify(hand, strictVanilla = false)
                 ?: return messages.send(player, "iteminfo-empty")
             val sellable = plugin.items.identify(hand, plugin.registry.sell.vanillaStrict)
@@ -110,6 +114,24 @@ class ShopCommands(private val plugin: Shop) {
             messages.send(
                 player, "iteminfo",
                 mapOf("id" to ref.key, "config" to ref.configId, "price" to (price?.let(messages::money) ?: "売却不可")),
+            )
+        }
+
+        private fun storageBoxInfo(player: Player, contents: StorageBoxHook.Contents?) {
+            if (contents == null) return messages.send(player, "iteminfo-empty")
+            val ref = plugin.items.identify(contents.item, strictVanilla = false)
+                ?: return messages.send(player, "iteminfo-empty")
+            val sellable = plugin.items.identify(contents.item, plugin.registry.sell.vanillaStrict)
+            val price = sellable?.takeIf { plugin.registry.sell.storageBox.enabled }?.let(plugin.registry::sellPrice)
+            val total = price?.let { it * contents.amount * (1 - plugin.registry.sell.storageBox.feePercent / 100.0) }
+            messages.send(
+                player, "iteminfo-storagebox",
+                mapOf(
+                    "id" to ref.key,
+                    "config" to ref.configId,
+                    "amount" to contents.amount.toString(),
+                    "price" to (total?.let(messages::money) ?: "売却不可"),
+                ),
             )
         }
 

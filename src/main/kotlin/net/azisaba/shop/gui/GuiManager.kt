@@ -465,12 +465,66 @@ class GuiManager(private val plugin: Shop) {
         sellStacks(player, contents, returnUnsold = true)
     }
 
+    /**
+     * 売却 1 件分の査定。
+     * Storage Box は中身 × 個数で査定して手数料を引く。[returned] は売却後に返す物（keep-box 時の空の Storage Box）
+     */
+    private class Appraisal(
+        val ref: ItemRef,
+        val count: Long,
+        val money: Double,
+        val fee: Double,
+        val storageBox: Boolean,
+        val returned: ItemStack?,
+    )
+
+    private fun appraise(stack: ItemStack?): Appraisal? {
+        if (stack == null || stack.isEmpty) return null
+        val strict = registry.sell.vanillaStrict
+        val boxes = items.storageBox
+        if (boxes != null && boxes.isStorageBox(stack)) {
+            val config = registry.sell.storageBox
+            if (!config.enabled) return null
+            val contents = boxes.contents(stack) ?: return null
+            val ref = items.identify(contents.item, strict) ?: return null
+            val price = registry.sellPrice(ref) ?: return null
+            val count = contents.amount * stack.amount
+            val gross = price * count
+            val fee = gross * config.feePercent / 100.0
+            val returned = if (config.keepBox) boxes.emptied(stack)?.asQuantity(stack.amount) else null
+            return Appraisal(ref, count, gross - fee, fee, true, returned)
+        }
+        val ref = items.identify(stack, strict) ?: return null
+        val price = registry.sellPrice(ref) ?: return null
+        return Appraisal(ref, stack.amount.toLong(), price * stack.amount, 0.0, false, null)
+    }
+
+    private fun isStorageBox(stack: ItemStack?): Boolean =
+        stack != null && items.storageBox?.isStorageBox(stack) == true
+
+    private fun sendStorageBoxSold(player: Player, appraisal: Appraisal) {
+        val key = if (appraisal.returned != null) "sell-storagebox-kept" else "sell-storagebox"
+        messages.send(
+            player, key,
+            mapOf(
+                "item" to appraisal.ref.configId,
+                "amount" to Text.number(appraisal.count.toDouble(), false),
+                "money" to money(appraisal.money),
+                "fee" to money(appraisal.fee),
+            ),
+        )
+    }
+
+    private fun giveBack(player: Player, stacks: Collection<ItemStack>) {
+        if (stacks.isEmpty()) return
+        player.inventory.addItem(*stacks.toTypedArray()).values.forEach { player.world.dropItem(player.location, it) }
+    }
+
     /** /sell hand */
     fun sellHand(player: Player) {
         val hand = player.inventory.itemInMainHand
-        val ref = items.identify(hand, registry.sell.vanillaStrict)
-        val price = ref?.let(registry::sellPrice)
-        if (price == null) {
+        val appraisal = appraise(hand)
+        if (appraisal == null) {
             messages.send(player, "not-sellable-hand")
             return
         }
@@ -478,27 +532,27 @@ class GuiManager(private val plugin: Shop) {
             messages.send(player, "economy-missing")
             return
         }
-        val total = price * hand.amount
-        val amount = hand.amount
-        player.inventory.setItemInMainHand(null)
-        if (!economy.deposit(player, total)) {
+        player.inventory.setItemInMainHand(appraisal.returned)
+        if (!economy.deposit(player, appraisal.money)) {
             player.inventory.setItemInMainHand(hand)
             messages.send(player, "something-wrong")
             return
         }
-        messages.send(player, "sell", mapOf("money" to money(total)))
+        if (appraisal.storageBox) sendStorageBoxSold(player, appraisal)
+        messages.send(player, "sell", mapOf("money" to money(appraisal.money)))
         playPurchaseSound(player)
-        log("SELL", player, ref, amount, total)
+        log("SELL", player, appraisal.ref, appraisal.count, appraisal.money)
     }
 
-    /** /sell all （メインインベントリ 36 枠のみ。防具・オフハンドは対象外） */
+    /** /sell all （メインインベントリ 36 枠のみ。防具・オフハンドは対象外。Storage Box は設定で有効な時のみ） */
     fun sellAll(player: Player) {
         val inventory = player.inventory
         val contents = inventory.storageContents
+        val includeBoxes = registry.sell.storageBox.includeInSellAll
         val sellable = ArrayList<ItemStack>()
         for ((index, stack) in contents.withIndex()) {
-            val ref = items.identify(stack, registry.sell.vanillaStrict) ?: continue
-            if (registry.sellPrice(ref) == null) continue
+            if (!includeBoxes && isStorageBox(stack)) continue
+            if (appraise(stack) == null) continue
             sellable += stack!!
             contents[index] = null
         }
@@ -516,34 +570,38 @@ class GuiManager(private val plugin: Shop) {
 
     private fun sellStacks(player: Player, stacks: List<ItemStack>, returnUnsold: Boolean) {
         if (stacks.isEmpty()) return
-        val strict = registry.sell.vanillaStrict
         val unsold = ArrayList<ItemStack>()
+        val returned = ArrayList<ItemStack>()
+        val sold = ArrayList<Appraisal>()
         var total = 0.0
         val economyReady = economy.available
         for (stack in stacks) {
-            val ref = items.identify(stack, strict)
-            val price = ref?.let(registry::sellPrice)
-            if (price == null || !economyReady) {
+            val appraisal = if (economyReady) appraise(stack) else null
+            if (appraisal == null) {
                 unsold += stack
                 continue
             }
-            total += price * stack.amount
-            log("SELL", player, ref, stack.amount, price * stack.amount)
+            total += appraisal.money
+            appraisal.returned?.let(returned::add)
+            sold += appraisal
         }
         if (total > 0 && !economy.deposit(player, total)) {
             messages.send(player, "something-wrong")
-            unsold.clear()
-            unsold += stacks
-            total = 0.0
+            giveBack(player, stacks)
+            return
         }
         if (!economyReady) messages.send(player, "economy-missing")
-        if (total > 0) {
+        for (appraisal in sold) {
+            if (appraisal.storageBox) sendStorageBoxSold(player, appraisal)
+            log("SELL", player, appraisal.ref, appraisal.count, appraisal.money)
+        }
+        giveBack(player, returned)
+        if (sold.isNotEmpty()) {
             messages.send(player, "sell", mapOf("money" to money(total)))
             playPurchaseSound(player)
         }
         if (unsold.isNotEmpty() && returnUnsold) {
-            val leftovers = player.inventory.addItem(*unsold.toTypedArray()).values
-            leftovers.forEach { player.world.dropItem(player.location, it) }
+            giveBack(player, unsold)
             messages.send(player, "cant-sell", mapOf("count" to unsold.sumOf { it.amount }.toString()))
         }
     }
@@ -556,7 +614,7 @@ class GuiManager(private val plugin: Shop) {
         player.playSound(sound)
     }
 
-    private fun log(action: String, player: Player, ref: ItemRef?, amount: Int, money: Double) {
+    private fun log(action: String, player: Player, ref: ItemRef?, amount: Number, money: Double) {
         if (!settings.transactionLog) return
         plugin.logger.info("[$action] ${player.name} ${ref?.key} x$amount ${Text.number(money, false)}")
     }

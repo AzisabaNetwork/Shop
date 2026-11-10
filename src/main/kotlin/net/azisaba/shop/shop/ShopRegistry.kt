@@ -25,7 +25,7 @@ class ShopRegistry(private val plugin: Plugin) {
         private set
     var transaction: TransactionLayout = defaultLayout()
         private set
-    var sell: SellConfig = SellConfig(6, true, true, true, false, true)
+    var sell: SellConfig = SellConfig(6, true, true, true, false, true, StorageBoxSell(true, false, 0.0, false))
         private set
 
     /** ItemRef.key → 1 個あたりの売却価格 */
@@ -47,6 +47,12 @@ class ShopRegistry(private val plugin: Plugin) {
             mythicEnabled = sellYaml.getBoolean("mythic.enabled", true),
             crackShotEnabled = sellYaml.getBoolean("crackshot.enabled", false),
             vanillaEnabled = sellYaml.getBoolean("vanilla.enabled", true),
+            storageBox = StorageBoxSell(
+                enabled = sellYaml.getBoolean("storagebox.enabled", true),
+                keepBox = sellYaml.getBoolean("storagebox.keep-box", false),
+                feePercent = sellYaml.getDouble("storagebox.fee-percent", 0.0).coerceIn(0.0, 100.0),
+                includeInSellAll = sellYaml.getBoolean("storagebox.include-in-sell-all", false),
+            ),
         )
         sellPrices = buildSellPrices(sellYaml)
     }

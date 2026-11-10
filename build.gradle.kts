@@ -20,6 +20,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
     compileOnly("com.github.Mori01231:MMLuck:1.8.1+1.21.11") { isTransitive = false }
     compileOnly("net.azisaba.rarity:api:2.1.1") { isTransitive = false }
+    compileOnly("xyz.acrylicstyle:StorageBox:1.6.5+1.21.11") { isTransitive = false }
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     testImplementation(kotlin("test"))

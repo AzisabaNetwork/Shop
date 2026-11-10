@@ -5,6 +5,9 @@
 #  /sell hand   … 手に持っているスタックを売却
 #  /sell all    … インベントリ（防具・オフハンド以外）の売れる物を全て売却
 #
+#  Storage Box (StorageBox プラグイン) も /sell の GUI に投げ込む / 手に持って /sell hand で
+#  中身ごと売却できます（中身 1 個の価格 × 入っている数 − 手数料）。下の storagebox を参照。
+#
 #  売却価格の決まり方
 #   1. use-shop-sell-prices: true なら shops/*.yml の sell-price を使う
 #      （id: 'mythic:XXX' / 'crackshot:XXX' のショップ品も対象）
@@ -45,3 +48,14 @@ crackshot:
   # 手に持った武器の weapon_id は /shopadmin iteminfo で確認できます
   items: {}
   #  AK-47: 5000
+
+storagebox:
+  # Storage Box を中身ごと売れるようにする（中身の価格は上の vanilla / mythic / crackshot と同じ）
+  enabled: true
+  # false: Storage Box ごと回収する（Storage Box 自体が手数料代わり）
+  # true : 中身だけ売って、空になった Storage Box を返す
+  keep-box: false
+  # 中身の売却額から差し引く手数料 (%)
+  fee-percent: 0
+  # /sell all でインベントリ内の Storage Box も売る（誤って全部売らないよう既定は false）
+  include-in-sell-all: false
