@@ -77,16 +77,23 @@ class GuiManager(private val plugin: Shop) {
             holder.actions[slot] = { p, _ -> clickEntry(p, null, 0, entry) }
         }
         if (pages.size > 1) {
+            // ボタン位置はショップ画面と同じ（最下段内の列）に揃える
+            val bottom = size - 9
+            val placeholders = mapOf("page" to (index + 1).toString(), "maxpage" to pages.size.toString())
             if (index > 0) {
-                val slot = size - 9
-                holder.backing.setItem(slot, button(settings.backward.material, settings.backward.name, settings.backward.lore))
+                val b = settings.backward
+                val slot = bottom + (b.slot - 45)
+                holder.backing.setItem(slot, button(b.material, b.name, b.lore, placeholders))
                 holder.actions[slot] = { p, _ -> openMenu(p, index - 1) }
             }
             if (index < pages.lastIndex) {
-                val slot = size - 1
-                holder.backing.setItem(slot, button(settings.forward.material, settings.forward.name, settings.forward.lore))
+                val b = settings.forward
+                val slot = bottom + (b.slot - 45)
+                holder.backing.setItem(slot, button(b.material, b.name, b.lore, placeholders))
                 holder.actions[slot] = { p, _ -> openMenu(p, index + 1) }
             }
+            val b = settings.pageIndicator
+            holder.backing.setItem(bottom + (b.slot - 45), button(b.material, b.name, b.lore, placeholders))
         }
         show(player, holder)
     }

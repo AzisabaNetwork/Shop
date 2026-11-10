@@ -32,7 +32,7 @@ buttons:
     name: '&b&l» &f次へ'
     shop-lore: '&8クリックして次のページへ'
     lore: '&8クリックして次のページへ'
-    slot: 52
+    slot: 50
   backward:
     id: 'GHAST_TEAR'
     shop-name: '&b&l« &f戻る'
@@ -47,7 +47,7 @@ buttons:
       - '&8━━━━━━━━━━━━━━━━━━'
       - '&7矢印でアイテムを閲覧できます'
       - '&8━━━━━━━━━━━━━━━━━━'
-    slot: 50
+    slot: 49
   # ショップ画面からメニューへ戻るボタン（本プラグインで追加）
   back:
     id: 'BARRIER'

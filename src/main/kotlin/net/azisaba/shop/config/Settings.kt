@@ -16,9 +16,9 @@ class Settings(config: FileConfiguration) {
     val transactionLog = config.getBoolean("transaction-log", false)
     val disabledWorlds: Set<String> = config.getStringList("disabled-worlds").toSet()
 
-    val forward = Button.read(config.getConfigurationSection("buttons.forward"), Material.ARROW, "&b» 次へ", 52)
+    val forward = Button.read(config.getConfigurationSection("buttons.forward"), Material.ARROW, "&b» 次へ", 50)
     val backward = Button.read(config.getConfigurationSection("buttons.backward"), Material.ARROW, "&b« 戻る", 48)
-    val pageIndicator = Button.read(config.getConfigurationSection("buttons.page-indicator"), Material.NETHER_STAR, "&fページ %page% / %maxpage%", 50)
+    val pageIndicator = Button.read(config.getConfigurationSection("buttons.page-indicator"), Material.NETHER_STAR, "&fページ %page% / %maxpage%", 49)
     val back = Button.read(config.getConfigurationSection("buttons.back"), Material.BARRIER, "&cメニューに戻る", 45)
 
     private val titles = config.getConfigurationSection("titles")

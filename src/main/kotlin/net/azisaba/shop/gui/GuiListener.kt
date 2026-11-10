@@ -35,13 +35,17 @@ class GuiListener(private val plugin: Shop) : Listener {
         val byPlayer = event.reason == InventoryCloseEvent.Reason.PLAYER
         when (holder) {
             is SellHolder -> plugin.gui.processSell(player, holder)
-            is ShopHolder -> if (byPlayer && !settings.disableEscapeBack && plugin.registry.menu.entries.isNotEmpty()) {
-                plugin.gui.openMenu(player)
+            // ESC: 2 ページ目以降なら 1 つ前のページへ、1 ページ目ならメニューへ
+            is ShopHolder -> if (byPlayer && !settings.disableEscapeBack) {
+                if (holder.page > 0) plugin.gui.openShop(player, holder.shop, holder.page - 1)
+                else if (plugin.registry.menu.entries.isNotEmpty()) plugin.gui.openMenu(player)
             }
             is TransactionHolder -> if (byPlayer && !settings.disableEscapeBackQuantity) {
                 plugin.gui.openShop(player, holder.shop, holder.page)
             }
-            is MenuHolder -> {}
+            is MenuHolder -> if (byPlayer && !settings.disableEscapeBack && holder.page > 0) {
+                plugin.gui.openMenu(player, holder.page - 1)
+            }
         }
     }
 }
