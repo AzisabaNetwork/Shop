@@ -24,6 +24,9 @@ abbreviate-prices: false
 # 売買をコンソールに記録
 transaction-log: false
 
+# GUI の開閉（閉じた理由・ESC で戻ったか）をコンソールに出す。不具合調査用
+debug: false
+
 # ショップ画面のボタン。slot は最下段 (45-53) のみ指定できます
 buttons:
   forward:

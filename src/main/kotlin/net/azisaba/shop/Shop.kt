@@ -41,6 +41,9 @@ class Shop : JavaPlugin() {
         ShopCommands(this).register()
 
         if (!economy.available) logger.warning("Vault の経済プラグインが見つかりません。売買はできません。")
+        if (server.pluginManager.getPlugin("GUIShop") != null) {
+            logger.warning("GUIShop が導入されています。メニューのクリックや /shop を GUIShop が横取りし、GUIShop 側の画面が開くことがあります。GUIShop を外してください。")
+        }
     }
 
     override fun onDisable() {

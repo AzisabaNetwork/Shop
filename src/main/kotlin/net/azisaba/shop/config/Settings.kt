@@ -14,6 +14,7 @@ class Settings(config: FileConfiguration) {
     val abbreviatePrices = config.getBoolean("abbreviate-prices", false)
     val purchaseSound: String = config.getString("purchase-sound", "ENTITY_PLAYER_LEVELUP")!!
     val transactionLog = config.getBoolean("transaction-log", false)
+    val debug = config.getBoolean("debug", false)
     val disabledWorlds: Set<String> = config.getStringList("disabled-worlds").toSet()
 
     val forward = Button.read(config.getConfigurationSection("buttons.forward"), Material.ARROW, "&b» 次へ", 50)
